@@ -1,0 +1,57 @@
+.container {
+  
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+  margin: auto;
+  margin-top: 50px;
+  height: 350px;
+  width: 250px;
+  border-style: solid;
+  border-color: rgb(219, 218, 218);
+  border-width: 10px;
+  border-radius: 5px;
+}
+
+.display {
+  grid-column: 1 / 5;
+  text-align: right;
+  font-size: 200%;
+  padding: 10px;
+  font-family: monospace;
+  
+}
+
+.buttons {
+  border-style: solid;
+  border-width: 1px;
+  border-color: lightgrey;
+  font-family: monospace;
+  font-size: large;
+  
+
+}
+
+.operator, .factorial {
+  background-color:  rgb(139, 196, 160);
+} 
+
+.equals {
+  background-color: rgb(180, 218, 202);
+}
+
+.digits {
+  background-color: rgb(140, 191, 207);
+}
+
+.pos-neg {
+  background-color: rgb(61, 113, 129);
+}
+
+.clear {
+  background-color: rgb(236, 140, 140);
+}
+
+.backspace {
+   background-color: papayawhip;
+ } 
