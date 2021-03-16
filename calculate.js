@@ -7,32 +7,27 @@ const backSpcBtn = document.querySelector(".backspace");
 const posNegBtn = document.querySelector(".pos-neg");
 
 
-
 //Test
 /*digitBtns.forEach(button => {
-	button.addEventListener("click", () => {
-		let digit = button.value;
-		display.textContent += digit;
-	})
-})*/
-
-/*digitBtns.forEach((button) => {
-	button.addEventListener("click", buttonValue);
-}); 
-
-function buttonValue() {
-	let showValue = button.value;
-	display.textContent += showValue;
-}*/ 
-
-digitBtns.forEach(button => {
 	button.addEventListener("click", () => {
 		let showValue = button.value;
 		display.textContent += showValue;
 	})
+})*/
+
+digitBtns.forEach((button) => {
+	button.addEventListener("click", buttonValue);
+}) 
+
+operationBtns.forEach((button) => {
+	button.addEventListener("click", buttonValue);
 })
 
-
+function buttonValue(event) {
+	let button = event.target;
+	let displayValue = button.value;
+	display.textContent += displayValue;
+} 
 
 
 allClearBtn.addEventListener("click", allClear);
@@ -97,7 +92,7 @@ function multiplyAll (array) {
 
 function power(base, exponent) {
 	return Math.pow(base, exponent);
-}
+}*/
 
 function factorial(n) {
 	if (n == 0) {
@@ -105,4 +100,4 @@ function factorial(n) {
 	} else {
 		return (n != 1) ? n * factorial(n - 1) : 1;
 	}	
-}*/ 
+} 
