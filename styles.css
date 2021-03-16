@@ -22,7 +22,7 @@
   
 }
 
-.buttons {
+button {
   border-style: solid;
   border-width: 1px;
   border-color: lightgrey;
@@ -30,7 +30,7 @@
   font-size: large;
   
 
-}
+} 
 
 .operator, .factorial {
   background-color:  rgb(139, 196, 160);

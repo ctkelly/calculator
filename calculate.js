@@ -1,18 +1,39 @@
 const display = document.querySelector(".display");
-const digitBtns = document.querySelectorAll(".buttons, .digits");
-const operationBtns = document.querySelectorAll(".buttons, .operator");
-const equalsBtn = document.querySelector(".buttons, .equals");
-const allClearBtn = document.querySelector(".buttons, .clear");
-const backSpcBtn = document.querySelector(".buttons, .backspace");
-const posNegBtn = document.querySelector(".buttons, .pos-neg");
+const digitBtns = document.querySelectorAll(".digits");
+const operationBtns = document.querySelectorAll(".operator");
+const equalsBtn = document.querySelector(".equals");
+const allClearBtn = document.querySelector(".clear");
+const backSpcBtn = document.querySelector(".backspace");
+const posNegBtn = document.querySelector(".pos-neg");
+
+
 
 //Test
-digitBtns.forEach(button => {
+/*digitBtns.forEach(button => {
 	button.addEventListener("click", () => {
-		let digit = button.id;
+		let digit = button.value;
 		display.textContent += digit;
 	})
+})*/
+
+/*digitBtns.forEach((button) => {
+	button.addEventListener("click", buttonValue);
+}); 
+
+function buttonValue() {
+	let showValue = button.value;
+	display.textContent += showValue;
+}*/ 
+
+digitBtns.forEach(button => {
+	button.addEventListener("click", () => {
+		let showValue = button.value;
+		display.textContent += showValue;
+	})
 })
+
+
+
 
 allClearBtn.addEventListener("click", allClear);
 
