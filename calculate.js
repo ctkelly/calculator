@@ -5,92 +5,50 @@ const equalsBtn = document.querySelector(".equals");
 const allClearBtn = document.querySelector(".clear");
 const backSpcBtn = document.querySelector(".backspace");
 const posNegBtn = document.querySelector(".pos-neg");
-const factorialBtn = document.querySelector(".factorial");
+const factorialBtn = document.querySelector(".factorialize");
+
+let operand1;
+let operand2;
+let currentOperation;
+
+
 
 digitBtns.forEach((button) => {
-	button.addEventListener("click", buttonValue);
+	button.addEventListener("click", inputDigit);
 }) 
 
 operationBtns.forEach((button) => {
-	button.addEventListener("click", buttonValue);
+	button.addEventListener("click", handleOperation);
 })
 
 allClearBtn.addEventListener("click", allClear);
 
 equalsBtn.addEventListener("click", operate);
 
-//factorialBtn.addEventListener("click", factorial);
+factorialBtn.addEventListener("click", factorial);
 
-
-//How to convert a string to a number with the below?
-/* Number()
-parseInt()
-parseFloat()
-*/
-
-//Experiment with fx expression. Needed to put before buttonValue is called for it to work. 
-/*const buttonValue = function(event) {
-	let button = event.target;
-	displayValue = button.value;
-	display.textContent += displayValue;
-	console.log(displayValue);
-	console.log(typeof displayValue);
-	return Number(displayValue);
-}*/
-
-
-//Original.  Concatenates on display but not in console.
-/*function buttonValue(event) {
-
-	let button = event.target;
-	displayValue = button.value;
-	display.textContent += displayValue;
-	console.log(displayValue);
-	console.log(typeof displayValue); //this needs to be a number and not a string -- parseInt and Number don't work when applied to above.
-	return displayValue;
-}*/
-
-//Experiment #1.  Does not concatenate in display or in console.
-/*function buttonValue(event) {
-
-	clickedButtonValue = event.target.value;
-	let displayedNumber = "";
-	display.textContent = displayedNumber += clickedButtonValue;
-	console.log(displayedNumber);
-	console.log(typeof displayedNumber);
-	return displayedNumber;
-}*/ 
-
-//Experiment #2. Says undefined in display and console. Concatenates in the display and in the console.
-/*function buttonValue(event) {
-
-	let clickedButtonValue = event.target.value;
-	display.value += clickedButtonValue;
-	display.textContent = display.value;
-	console.log(display.value);
-}*/
-
-//Experiment #3. Concatenates in display but not in console.
-/*function buttonValue(event) {
-	
+//Experiment #3. How do we determine if there is an operation in progress?  Use currentOperation variable, null, 
+function inputDigit(event) {
 	let clickedButtonValue = event.target.value;
 	display.textContent += clickedButtonValue;
-	console.log(clickedButtonValue);
-	console.log(typeof clickedButtonValue); //string
 
-}*/
+}
 
-//Experiment #4.  Does not concatenate in display or console.
-function buttonValue(event) {
-	let displayedNumber = "";
+/* 1) determine which function to call 2) get operands (num1 and num2)
+	- num1 is whatever is in the display
+	- num2 is to be pressed
+*/
+function handleOperation(event) {
 	let clickedButtonValue = event.target.value;
-	displayedNumber += Number(clickedButtonValue);
-	display.textContent = displayedNumber;
-	console.log(typeof clickedButtonValue); //string
-	console.log(typeof displayedNumber); //string
-	console.log(displayedNumber);
-} 
+	currentOperation = window[clickedButtonValue];
+	console.log(currentOperation);
+	operand1 = parseFloat(getDisplayValue());
+	console.log(operand1);
+}
 
+function getDisplayValue() {
+	return display.textContent;
+}
 
 //All clear function.  This works on the surface but not internally? 
 function allClear() {
@@ -113,6 +71,25 @@ function multiply(num1, num2) {
 function divide(num1, num2) {
   return num1 / num2;
 }
+
+//Factorial fx, using for loop
+function factorial(event) {
+	let clickedButtonValue = event.target.value;
+	currentOperation = window[clickedButtonValue];
+	console.log(currentOperation);
+	let num = parseInt(getDisplayValue());
+	if (num === 0 || num === 1) {
+		num = 1;
+		display.textContent = num;
+		return num;
+	}
+	for(let i = num - 1; i >= 1; i--) {
+		num *= i;
+	}
+	console.log(num);
+	display.textContent = num;
+	return num;
+} 
 
 //Function that takes two numbers and calls one of the above functions on the numbers
 function operate(operator, num1, num2) {
@@ -174,12 +151,7 @@ function power(base, exponent) {
   return num;
 }*/
 
-
-//Factorial, with for loop
-/*function factorial(event) {
-	
-	let num = event.target.value; //??
-
+/*function factorial(num) {
 	if ( num === 0 || num === 1) {
 		return 1;
 	}
@@ -187,4 +159,4 @@ function power(base, exponent) {
 		num *= i;
 	}
 	return num; 
-}*/
+}*/ 
