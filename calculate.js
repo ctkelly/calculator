@@ -7,10 +7,10 @@ const backSpcBtn = document.querySelector(".backspace");
 const posNegBtn = document.querySelector(".pos-neg");
 const factorialBtn = document.querySelector(".factorialize");
 
-let operand1;
-let operand2;
-let currentOperation;
-
+let operand1 = null;
+let operand2 = null;
+let currentOperation = null;
+let calculationComplete = false;
 
 
 digitBtns.forEach((button) => {
@@ -23,15 +23,32 @@ operationBtns.forEach((button) => {
 
 allClearBtn.addEventListener("click", allClear);
 
-equalsBtn.addEventListener("click", operate);
+equalsBtn.addEventListener("click", function(event) {
+	if (currentOperation !== null) {
+		operand2 = parseFloat(getDisplayValue());
+		display.textContent = operate(currentOperation, operand1, operand2);
+		operand1 = null; // Put these in a separate function later
+		operand2 = null;
+		currentOperation = null;
+		calculationComplete = true;
+	}
+});
 
 factorialBtn.addEventListener("click", factorial);
 
 //Experiment #3. How do we determine if there is an operation in progress?  Use currentOperation variable, null, 
 function inputDigit(event) {
 	let clickedButtonValue = event.target.value;
-	display.textContent += clickedButtonValue;
+	if (currentOperation === null && calculationComplete === false) {
+		display.textContent += clickedButtonValue;
+		// added the below to attempt fix for concatenation problem after pressing equals
+	} else if (currentOperation == null && calculationComplete === true) {
+		operand1 = parseFloat(getDisplayValue()); // ??
 
+		display.textContent += clickedButtonValue; 
+	} else {
+		display.textContent = clickedButtonValue;
+	} 
 }
 
 /* 1) determine which function to call 2) get operands (num1 and num2)
@@ -53,7 +70,15 @@ function getDisplayValue() {
 //All clear function.  This works on the surface but not internally? 
 function allClear() {
 	display.textContent = "";
+	operand1 = null;
+	operand2 = null;
+	currentOperation = null;
 } 
+
+
+
+
+
 
 //Functions below are add/subtract/multiply/divide for single pairs of numbers only
 function add (num1, num2) {
@@ -69,8 +94,12 @@ function multiply(num1, num2) {
 }
 
 function divide(num1, num2) {
+	if (num2 === 0) {
+		return display.textContent = "dividing by 0 is undefined";
+	} else {
   return num1 / num2;
-}
+	}
+} 
 
 //Factorial fx, using for loop
 function factorial(event) {
@@ -78,7 +107,10 @@ function factorial(event) {
 	currentOperation = window[clickedButtonValue];
 	console.log(currentOperation);
 	let num = parseInt(getDisplayValue());
-	if (num === 0 || num === 1) {
+
+	if (num > 100) {
+		return display.textContent = "Error";
+	} else if (num === 0 || num === 1) {
 		num = 1;
 		display.textContent = num;
 		return num;
@@ -86,7 +118,6 @@ function factorial(event) {
 	for(let i = num - 1; i >= 1; i--) {
 		num *= i;
 	}
-	console.log(num);
 	display.textContent = num;
 	return num;
 } 
@@ -95,7 +126,7 @@ function factorial(event) {
 function operate(operator, num1, num2) {
   let answer = 0;
   let mathOperation = operator(num1, num2);
-  return answer += mathOperation;
+  return answer += mathOperation; 
   
 } 
 
