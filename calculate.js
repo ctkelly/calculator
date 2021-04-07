@@ -11,6 +11,7 @@ let operand1 = null;
 let operand2 = null;
 let currentOperation = null;
 let calculationComplete = false;
+let waitingForSecondOperand = false;
 
 
 digitBtns.forEach((button) => {
@@ -20,6 +21,8 @@ digitBtns.forEach((button) => {
 operationBtns.forEach((button) => {
 	button.addEventListener("click", handleOperation);
 })
+
+factorialBtn.addEventListener("click", factorial);
 
 allClearBtn.addEventListener("click", allClear);
 
@@ -31,53 +34,54 @@ equalsBtn.addEventListener("click", function(event) {
 		operand2 = null;
 		currentOperation = null;
 		calculationComplete = true;
+
 	}
 });
 
-factorialBtn.addEventListener("click", factorial);
-
-//Experiment #3. How do we determine if there is an operation in progress?  Use currentOperation variable, null, 
-function inputDigit(event) {
-	let clickedButtonValue = event.target.value;
-	if (currentOperation === null && calculationComplete === false) {
-		display.textContent += clickedButtonValue;
-		// added the below to attempt fix for concatenation problem after pressing equals
-	} else if (currentOperation == null && calculationComplete === true) {
-		operand1 = parseFloat(getDisplayValue()); // ??
-
-		display.textContent += clickedButtonValue; 
-	} else {
-		display.textContent = clickedButtonValue;
-	} 
+function getDisplayValue() {
+	return display.textContent;
 }
 
-/* 1) determine which function to call 2) get operands (num1 and num2)
-	- num1 is whatever is in the display
-	- num2 is to be pressed
-*/
+// Pseudocode to troubleshoot inputDigit fx (the proper way for it to work):
+// if display is empty, then += clickedbtnvalue 
+// if waiting for second op is false and display is not empty, then display.textCont += clickedbtnval
+// if waiting for second op is true and display is not empty, then clear display and display.textCont = clickedbtnval and set waiting for second op to false
+// then the display is not empty so on the next button press, will execute directions for waiting false and display not empty
+
+// It works now!
+function inputDigit(event) {
+	let clickedButtonValue = event.target.value;
+	if (display.textContent === "") {
+		display.textContent = clickedButtonValue;
+	} else if (waitingForSecondOperand === false && display.textContent !== "") {
+		display.textContent += clickedButtonValue;
+	} else if (waitingForSecondOperand === true && display.textContent !== "") {
+		display.textContent = "";
+		display.textContent = clickedButtonValue;
+		waitingForSecondOperand = false;
+	} 
+} 
+
+
+// When operator button is pressed, after inputting the first operand
 function handleOperation(event) {
 	let clickedButtonValue = event.target.value;
 	currentOperation = window[clickedButtonValue];
 	console.log(currentOperation);
 	operand1 = parseFloat(getDisplayValue());
 	console.log(operand1);
+	waitingForSecondOperand = true;
+	console.log(waitingForSecondOperand);
 }
 
-function getDisplayValue() {
-	return display.textContent;
-}
 
-//All clear function.  This works on the surface but not internally? 
+// All clear function   
 function allClear() {
 	display.textContent = "";
 	operand1 = null;
 	operand2 = null;
 	currentOperation = null;
 } 
-
-
-
-
 
 
 //Functions below are add/subtract/multiply/divide for single pairs of numbers only
@@ -95,7 +99,7 @@ function multiply(num1, num2) {
 
 function divide(num1, num2) {
 	if (num2 === 0) {
-		return display.textContent = "dividing by 0 is undefined";
+		return display.textContent = "sorry, you can't divide by 0!";
 	} else {
   return num1 / num2;
 	}
@@ -126,8 +130,10 @@ function factorial(event) {
 function operate(operator, num1, num2) {
   let answer = 0;
   let mathOperation = operator(num1, num2);
-  return answer += mathOperation; 
-  
+	if (operator === divide && num2 === 0) {
+		return mathOperation;
+	} else 
+	return answer += mathOperation; 
 } 
 
 
