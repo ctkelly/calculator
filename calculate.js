@@ -22,9 +22,13 @@ operationBtns.forEach((button) => {
 	button.addEventListener("click", handleOperation);
 })
 
+posNegBtn.addEventListener("click", changeSign);
+
 factorialBtn.addEventListener("click", factorial);
 
 allClearBtn.addEventListener("click", allClear);
+
+backSpcBtn.addEventListener("click", backspace);
 
 equalsBtn.addEventListener("click", function(event) {
 	if (currentOperation !== null) {
@@ -38,8 +42,42 @@ equalsBtn.addEventListener("click", function(event) {
 	}
 });
 
+// Get whatever number is showing in the display
 function getDisplayValue() {
 	return display.textContent;
+}
+
+// All clear function   CHECK THAT IT'S REALLY ALL CLEAR.  I think so.
+function allClear() {
+	display.textContent = "";
+	operand1 = null;
+	operand2 = null;
+	currentOperation = null;
+	calculationComplete = false;
+	waitingForSecondOperand = false;
+} 
+
+// Changes display value from positive to negative and vice versa
+function changeSign() {
+	if (display.textContent === "") {
+		display.textContent = "-";
+	} else if (display.textContent === "-") {
+		display.textContent = "";
+	} else if (display.textContent === "0") {
+		display.textContent = "-";
+	} else if (parseFloat(getDisplayValue()) > 0) {
+		display.textContent = parseFloat(getDisplayValue()) * -1;
+	} else {
+		display.textContent = parseFloat(getDisplayValue()) * -1;
+	}
+} 
+
+// Backspace to delete the most recent digit press
+function backspace () {
+	let digitString = display.textContent;
+	let newDigitString = digitString.slice(0, -1);
+	display.textContent = newDigitString;
+
 }
 
 // Pseudocode to troubleshoot inputDigit fx (the proper way for it to work):
@@ -62,27 +100,16 @@ function inputDigit(event) {
 	} 
 } 
 
-
 // When operator button is pressed, after inputting the first operand
 function handleOperation(event) {
 	let clickedButtonValue = event.target.value;
 	currentOperation = window[clickedButtonValue];
-	console.log(currentOperation);
+	//console.log(currentOperation);
 	operand1 = parseFloat(getDisplayValue());
-	console.log(operand1);
+	//console.log(operand1);
 	waitingForSecondOperand = true;
-	console.log(waitingForSecondOperand);
+	//console.log(waitingForSecondOperand);
 }
-
-
-// All clear function   
-function allClear() {
-	display.textContent = "";
-	operand1 = null;
-	operand2 = null;
-	currentOperation = null;
-} 
-
 
 //Functions below are add/subtract/multiply/divide for single pairs of numbers only
 function add (num1, num2) {
@@ -99,7 +126,7 @@ function multiply(num1, num2) {
 
 function divide(num1, num2) {
 	if (num2 === 0) {
-		return display.textContent = "sorry, you can't divide by 0!";
+		return display.textContent = "not possible!"; // How could I resize longer text to fit into the div
 	} else {
   return num1 / num2;
 	}
@@ -113,7 +140,7 @@ function factorial(event) {
 	let num = parseInt(getDisplayValue());
 
 	if (num > 100) {
-		return display.textContent = "Error";
+		return display.textContent = "error";
 	} else if (num === 0 || num === 1) {
 		num = 1;
 		display.textContent = num;
@@ -132,7 +159,7 @@ function operate(operator, num1, num2) {
   let mathOperation = operator(num1, num2);
 	if (operator === divide && num2 === 0) {
 		return mathOperation;
-	} else 
+	} else // there are no curly braces here but it still works ASK JEFF
 	return answer += mathOperation; 
 } 
 
