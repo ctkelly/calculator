@@ -1,5 +1,4 @@
 .container {
-  
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(6, 1fr);
@@ -11,6 +10,7 @@
   border-color: rgb(219, 218, 218);
   border-width: 10px;
   border-radius: 5px;
+  
 }
 
 .display {
@@ -20,16 +20,21 @@
   padding: 10px;
   font-family: monospace;
   
+  /*overflow-wrap: break-word;*/
+  /* new below */
+  /*white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; */
+  
 }
 
 button {
   border-style: solid;
   border-width: 1px;
+  border-radius: 1px;
   border-color: lightgrey;
   font-family: monospace;
   font-size: large;
-  
-
 } 
 
 .operator, .factorialize {
@@ -55,3 +60,20 @@ button {
 .backspace {
    background-color: papayawhip;
  } 
+
+button:active { 
+  outline: darkcyan;
+  border: darkcyan;
+} 
+
+button:focus {
+  outline: darkcyan;
+  border: darkcyan;
+} 
+
+button:hover {
+  filter: brightness(110%);
+  border-style: solid;
+  border-color: snow;
+  border-width: 1px;
+} 
