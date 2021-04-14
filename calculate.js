@@ -13,7 +13,6 @@ let currentOperation = null;
 let calculationComplete = false;
 let waitingForSecondOperand = false;
 
-
 digitBtns.forEach((button) => {
 	button.addEventListener("click", inputDigit);
 }) 
@@ -33,8 +32,8 @@ backSpcBtn.addEventListener("click", backspace);
 equalsBtn.addEventListener("click", function(event) {
 	if (currentOperation !== null) {
 		operand2 = parseFloat(getDisplayValue());
-		display.textContent = operate(currentOperation, operand1, operand2);
-		operand1 = null; // Put these in a separate function later
+		setDisplayValue(operate(currentOperation, operand1, operand2));
+		operand1 = null; 
 		operand2 = null;
 		currentOperation = null;
 		calculationComplete = true;
@@ -42,14 +41,30 @@ equalsBtn.addEventListener("click", function(event) {
 	}
 });
 
-// Get whatever number is showing in the display
+// Get whatever is showing in the display
 function getDisplayValue() {
 	return display.textContent;
 }
 
-// All clear function   CHECK THAT IT'S REALLY ALL CLEAR.  I think so.
+// Set what's going to be shown in the display.  Param "value" is a placeholder for whatever will be shown in the display. 
+function setDisplayValue(value) {
+  display.textContent = value;
+} 
+
+function appendToSetDisplayValue(value) {
+  display.textContent += value;
+}
+
+// Backspace to delete the most recent digit press
+function backspace () {
+	let digitString = getDisplayValue();
+	let newDigitString = digitString.slice(0, -1);
+	setDisplayValue(newDigitString);
+}
+
+// All clear function 
 function allClear() {
-	display.textContent = "";
+  setDisplayValue("");
 	operand1 = null;
 	operand2 = null;
 	currentOperation = null;
@@ -59,59 +74,47 @@ function allClear() {
 
 // Changes display value from positive to negative and vice versa
 function changeSign() {
-	if (display.textContent === "") {
-		display.textContent = "-";
-	} else if (display.textContent === "-") {
-		display.textContent = "";
-	} else if (display.textContent === "0") {
-		display.textContent = "-";
+  let displayValue = getDisplayValue();  // this doesn't work as a global variable because...practice explaining to Jeff 
+	if (displayValue === "") {
+		setDisplayValue("-");
+	} else if (displayValue === "-") {
+		setDisplayValue("");
+	} else if (displayValue === "0") {
+		setDisplayValue("-");
 	} else if (parseFloat(getDisplayValue()) > 0) {
-		display.textContent = parseFloat(getDisplayValue()) * -1;
+		setDisplayValue(parseFloat(getDisplayValue()) * -1);
 	} else {
-		display.textContent = parseFloat(getDisplayValue()) * -1;
+		setDisplayValue(parseFloat(getDisplayValue()) * -1);
 	}
 } 
 
-// Backspace to delete the most recent digit press
-function backspace () {
-	let digitString = display.textContent;
-	let newDigitString = digitString.slice(0, -1);
-	display.textContent = newDigitString;
-
-}
-
-// Pseudocode to troubleshoot inputDigit fx (the proper way for it to work):
-// if display is empty, then += clickedbtnvalue 
-// if waiting for second op is false and display is not empty, then display.textCont += clickedbtnval
-// if waiting for second op is true and display is not empty, then clear display and display.textCont = clickedbtnval and set waiting for second op to false
-// then the display is not empty so on the next button press, will execute directions for waiting false and display not empty
-
-// It works now!
+// Input digits into the display -- updated with decimal validation
 function inputDigit(event) {
+  let displayValue = getDisplayValue(); // also cannot be global for same reason as above
 	let clickedButtonValue = event.target.value;
-	if (display.textContent === "") {
-		display.textContent = clickedButtonValue;
-	} else if (waitingForSecondOperand === false && display.textContent !== "") {
-		display.textContent += clickedButtonValue;
-	} else if (waitingForSecondOperand === true && display.textContent !== "") {
-		display.textContent = "";
-		display.textContent = clickedButtonValue;
+  if (displayValue.includes(".") && clickedButtonValue === "." && waitingForSecondOperand === false) {
+    return;
+  } else if (displayValue === "") {
+		setDisplayValue(clickedButtonValue);
+	} else if (waitingForSecondOperand === false && displayValue !== "") {
+		appendToSetDisplayValue(clickedButtonValue);
+	} else if (waitingForSecondOperand === true && displayValue !== "") {
+		setDisplayValue("");
+		setDisplayValue(clickedButtonValue);
 		waitingForSecondOperand = false;
 	} 
 } 
+
 
 // When operator button is pressed, after inputting the first operand
 function handleOperation(event) {
 	let clickedButtonValue = event.target.value;
 	currentOperation = window[clickedButtonValue];
-	//console.log(currentOperation);
 	operand1 = parseFloat(getDisplayValue());
-	//console.log(operand1);
 	waitingForSecondOperand = true;
-	//console.log(waitingForSecondOperand);
 }
 
-//Functions below are add/subtract/multiply/divide for single pairs of numbers only
+//Functions below are add/subtract/multiply/divide for single pairs of numbers only.  
 function add (num1, num2) {
 	return num1 + num2;
 }
@@ -126,101 +129,50 @@ function multiply(num1, num2) {
 
 function divide(num1, num2) {
 	if (num2 === 0) {
-		return display.textContent = "not possible!"; // How could I resize longer text to fit into the div
+    return display.textContent = "not possible!"; // this DOES NOT WORK!!! if using setDisplayValue -- won't display the message
 	} else {
   return num1 / num2;
 	}
 } 
 
 //Factorial fx, using for loop
-function factorial(event) {
-	let clickedButtonValue = event.target.value;
-	currentOperation = window[clickedButtonValue];
-	console.log(currentOperation);
+function factorial(event) { // why is event grayed out?
 	let num = parseInt(getDisplayValue());
-
 	if (num > 100) {
-		return display.textContent = "error";
+		return setDisplayValue("error"); // if no return, it won't display "error" -- is it skipping to line 147? -- displays "infinity"
 	} else if (num === 0 || num === 1) {
 		num = 1;
-		display.textContent = num;
-		return num;
+		setDisplayValue(num);
 	}
 	for(let i = num - 1; i >= 1; i--) {
 		num *= i;
 	}
-	display.textContent = num;
-	return num;
+  setDisplayValue(formatResult(num));
 } 
 
-//Function that takes two numbers and calls one of the above functions on the numbers
+
+// Original. Takes as params an operator fx and two nums to perform the calculation. // Doesn't work without return statements. Is it because the return value needs to be returned to operator()?
 function operate(operator, num1, num2) {
   let answer = 0;
-  let mathOperation = operator(num1, num2);
+  let mathOperation = operator(num1, num2); // operator() needs the return value to populate mathOperation?
 	if (operator === divide && num2 === 0) {
-		return mathOperation;
-	} else // there are no curly braces here but it still works ASK JEFF
-	return answer += mathOperation; 
+    return mathOperation;
+	} else if (operator === divide && mathOperation < 1) {
+    let result = mathOperation;
+    return formatResult(result); 
+  } else {
+    let result = parseFloat(answer += mathOperation);
+    return formatResult(result);
+  } 
 } 
 
 
-//Functions below are for finding 1) sums and products of arrays; 2) exponents; 3) factorials
-/*function sum (array) { 
-	let initialValue = 0;
-	
-	let reducer = (runningSumTotal, item) => {
-		return runningSumTotal + item;
-	}
-
-	let sum = array.reduce(reducer, initialValue);
-
-	return sum;
-} 
-
-function multiplyAll (array) {
-	let initialValue = 1;
-	
-	let reducer = (runningProductTotal, item) => {
-		return runningProductTotal * item;
-	}
-
-	let product = array.reduce(reducer, initialValue);
-
-	return product;
-	
-} 
-
-function power(base, exponent) {
-	return Math.pow(base, exponent);
-}*/
-
-//Factorial, with recursion
-/*function factorial(buttonValue) {
-	if (buttonValue == 0) {
-		return 1;
-	} else if (buttonValue > 9) {
-		return "Error";
-	} else {
-		return (buttonValue != 1) ? buttonValue * factorial(buttonValue - 1) : 1;
-	}	
-}*/ 
-
-//This works the same as below even without curly braces after if statement.  ASK JEFF.
-/*function factorialize(num) {
-  if (num === 0 || num === 1)
-    return 1;
-  for (var i = num - 1; i >= 1; i--) {
-    num *= i;
+// Formats the result ( > 1 ) to certain number of sig figs (NOT decimal places) to fit in the display and formats with sci notation. Using toFixed() doesn't limit the decimals nor formats with sci notation.
+function formatResult(result) {
+  if (result < 1) {
+    return parseFloat(result.toFixed(7)); // wrapping in parseFloat gets rid of trailing zeros :)
+  } else if (result.toString().length > 7) {
+    return parseFloat(result.toPrecision(7));
   }
-  return num;
-}*/
-
-/*function factorial(num) {
-	if ( num === 0 || num === 1) {
-		return 1;
-	}
-	for (let i = num - 1; i >= 1; i--) {
-		num *= i;
-	}
-	return num; 
-}*/ 
+  return result;
+} 
