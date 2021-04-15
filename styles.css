@@ -7,7 +7,7 @@
   height: 350px;
   width: 250px;
   border-style: solid;
-  border-color: rgb(219, 218, 218);
+  border-color: rgb(146, 158, 170);
   border-width: 10px;
   border-radius: 5px;
   
@@ -16,16 +16,9 @@
 .display {
   grid-column: 1 / 5;
   text-align: right;
-  font-size: 200%;
-  padding: 10px;
-  font-family: monospace;
-  
-  /*overflow-wrap: break-word;*/
-  /* new below */
-  /*white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis; */
-  
+  font-size: x-large;
+  padding: 15px;
+  font-family: "Lucida console", monospace;
 }
 
 button {
@@ -33,16 +26,25 @@ button {
   border-width: 1px;
   border-radius: 1px;
   border-color: lightgrey;
-  font-family: monospace;
+  font-family: "Lucida console", monospace;
   font-size: large;
+  color: white;
 } 
 
-.operator, .factorialize {
-  background-color:  rgb(139, 196, 160);
+.operator {
+  background-color:  rgb(118, 209, 159);
+  font-size: 20px;
 } 
+
+.factorialize {
+  background-color:  rgb(162, 217, 206);
+  ;
+  font-size: large;
+}
 
 .equals {
-  background-color: rgb(180, 218, 202);
+  background-color: rgb(67, 179, 117);
+  font-size: x-large;
 }
 
 .digits {
@@ -54,12 +56,16 @@ button {
 }
 
 .clear {
-  background-color: rgb(236, 140, 140);
+  background-color: lightcoral;
 }
 
 .backspace {
-   background-color: papayawhip;
+   background-color: rgb(236, 140, 140);
  } 
+
+ i.material-icons {
+   font-size: 18px;
+ }
 
 button:active { 
   outline: darkcyan;
