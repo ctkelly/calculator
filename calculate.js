@@ -72,6 +72,12 @@ function allClear() {
   waitingForSecondOperand = false;
 }
 
+// Places commas as thousands separators
+function formatNumberWithCommas(number) {
+	return number.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+} 
+
+
 // Changes display value from positive to negative and vice versa
 function changeSign() {
   let displayValue = getDisplayValue(); // this doesn't work as a global variable because...practice explaining to Jeff
@@ -102,7 +108,8 @@ function inputDigit(event) {
   } else if (waitingForSecondOperand === true && displayValue !== "") {
     setDisplayValue("");
     setDisplayValue(clickedButtonValue);
-    waitingForSecondOperand = false;
+    waitingForSecondOperand = false; // change below
+		calculationComplete = false;
   } else if (calculationComplete === true && displayValue !== "") {
 		setDisplayValue("");
 		setDisplayValue(clickedButtonValue);
@@ -158,7 +165,7 @@ function factorial(event) {
   setDisplayValue(formatResult(num));
 }
 
-// Original. Takes as params an operator fx and two nums to perform the calculation. // Doesn't work without return statements. Is it because the return value needs to be returned to operator()?
+// Operate function. Takes as params an operator fx and two nums to perform the calculation. // Doesn't work without return statements. Is it because the return value needs to be returned to operator()?
 function operate(operator, num1, num2) {
   let answer = 0;
   let mathOperation = operator(num1, num2); // operator() needs the return value to populate mathOperation?
@@ -177,8 +184,8 @@ function operate(operator, num1, num2) {
 function formatResult(result) {
   if (result < 1) {
     return parseFloat(result.toFixed(7)); // wrapping in parseFloat gets rid of trailing zeros :)
-  } else if (result.toString().length > 7) {
-    return parseFloat(result.toPrecision(7));
+  } else if (result.toString().length > 9) {
+    return formatNumberWithCommas(parseFloat(result.toPrecision(9)));
   }
-  return result;
+  return formatNumberWithCommas(result); 
 } 
