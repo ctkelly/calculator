@@ -96,20 +96,11 @@ function changeSign() {
 function inputDigit(event) {
   let displayValue = getDisplayValue(); // also cannot be global for same reason as above
   let clickedButtonValue = event.target.value;
-  if (
-    displayValue.includes(".") &&
-    clickedButtonValue === "." &&
-    waitingForSecondOperand === false
-  ) {
+  if (displayValue.includes(".") && clickedButtonValue === "." && waitingForSecondOperand === false) {
     return;
   } else if (displayValue === "") {
     setDisplayValue(clickedButtonValue);
-  } else if (
-    displayValue.toString().length <= 9 &&
-    waitingForSecondOperand === false &&
-    calculationComplete === false &&
-    displayValue !== ""
-  ) {
+  } else if (displayValue.toString().length <= 9 && waitingForSecondOperand === false && calculationComplete === false && displayValue !== "") {
     appendToSetDisplayValue(clickedButtonValue);
   } else if (waitingForSecondOperand === true && displayValue !== "") {
     setDisplayValue("");
@@ -159,7 +150,7 @@ function factorial(event) {
   // why is event grayed out?
   let num = parseInt(getDisplayValue());
   if (num > 100) {
-    return setDisplayValue("error"); // if no return, it won't display "error" -- is it skipping to line 147? -- displays "infinity"
+    return setDisplayValue("error"); // if no return, it won't display "error" -- is it skipping to the loop? -- displays "infinity"
   } else if (num === 0 || num === 1) {
     num = 1;
     setDisplayValue(num);
