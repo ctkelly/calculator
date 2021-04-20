@@ -37,7 +37,6 @@ equalsBtn.addEventListener("click", function (event) {
     operand2 = null;
     currentOperation = null;
     calculationComplete = true;
-		//console.log(`calc comp ${calculationComplete}`);
   }
 });
 
@@ -72,11 +71,10 @@ function allClear() {
   waitingForSecondOperand = false;
 }
 
-// Places commas as thousands separators
+// Inserts commas as thousands separators
 function formatNumberWithCommas(number) {
-	return number.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
-} 
-
+  return number.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+}
 
 // Changes display value from positive to negative and vice versa
 function changeSign() {
@@ -98,33 +96,40 @@ function changeSign() {
 function inputDigit(event) {
   let displayValue = getDisplayValue(); // also cannot be global for same reason as above
   let clickedButtonValue = event.target.value;
-	if (displayValue.includes(".") && clickedButtonValue === "." && waitingForSecondOperand === false) {
+  if (
+    displayValue.includes(".") &&
+    clickedButtonValue === "." &&
+    waitingForSecondOperand === false
+  ) {
     return;
   } else if (displayValue === "") {
     setDisplayValue(clickedButtonValue);
-  } else if (displayValue.toString().length <= 9 && waitingForSecondOperand === false && calculationComplete === false && displayValue !== "") {
+  } else if (
+    displayValue.toString().length <= 9 &&
+    waitingForSecondOperand === false &&
+    calculationComplete === false &&
+    displayValue !== ""
+  ) {
     appendToSetDisplayValue(clickedButtonValue);
-		//console.log(`calc complete ${calculationComplete}`);
   } else if (waitingForSecondOperand === true && displayValue !== "") {
     setDisplayValue("");
     setDisplayValue(clickedButtonValue);
-    waitingForSecondOperand = false; // change below
-		calculationComplete = false;
+    waitingForSecondOperand = false;
+    calculationComplete = false;
   } else if (calculationComplete === true && displayValue !== "") {
-		setDisplayValue("");
-		setDisplayValue(clickedButtonValue);
-		calculationComplete = false;
-		//console.log(`calc comp ${calculationComplete}`);
-	}
-}  
+    setDisplayValue("");
+    setDisplayValue(clickedButtonValue);
+    calculationComplete = false;
+  }
+}
 
 // When operator button is pressed, after inputting the first operand
 function handleOperation(event) {
   let clickedButtonValue = event.target.value;
   currentOperation = window[clickedButtonValue];
-	console.log(currentOperation);
+  console.log(currentOperation);
   operand1 = parseFloat(getDisplayValue());
-	console.log(operand1);
+  console.log(operand1);
   waitingForSecondOperand = true;
 }
 
@@ -187,5 +192,5 @@ function formatResult(result) {
   } else if (result.toString().length > 9) {
     return formatNumberWithCommas(parseFloat(result.toPrecision(9)));
   }
-  return formatNumberWithCommas(result); 
-} 
+  return formatNumberWithCommas(result);
+}
