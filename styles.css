@@ -39,7 +39,17 @@ button {
 .factorialize {
   background-color:  rgb(162, 217, 206);
   ;
-  font-size: large;
+  font-size: 24px;
+}
+
+.iconify {
+  position: relative;
+  margin-right: -2px;
+  /*display: inline;*/
+  /*margin: auto;*/
+  /*vertical-align: middle;*/
+  /*padding-top: 8px;*/
+  font-size: 26px;
 }
 
 .equals {
@@ -64,7 +74,10 @@ button {
  } 
 
  i.material-icons {
-   font-size: 18px;
+   position: relative;
+   padding-top: 3px;
+   font-size: 22px;
+   
  }
 
 button:active { 
