@@ -37,6 +37,7 @@ equalsBtn.addEventListener("click", function (event) {
     operand2 = null;
     currentOperation = null;
     calculationComplete = true;
+		//console.log(`calc comp ${calculationComplete}`);
   }
 });
 
@@ -87,28 +88,36 @@ function changeSign() {
   }
 }
 
-// Input digits into the display -- updated with decimal validation
+// Input digits into the display -- updated with decimal validation and digit limit for operands
 function inputDigit(event) {
   let displayValue = getDisplayValue(); // also cannot be global for same reason as above
   let clickedButtonValue = event.target.value;
-  if (displayValue.includes(".") && clickedButtonValue === "." && waitingForSecondOperand === false) {
+	if (displayValue.includes(".") && clickedButtonValue === "." && waitingForSecondOperand === false) {
     return;
   } else if (displayValue === "") {
     setDisplayValue(clickedButtonValue);
-  } else if (waitingForSecondOperand === false && displayValue !== "") {
+  } else if (displayValue.toString().length <= 9 && waitingForSecondOperand === false && calculationComplete === false && displayValue !== "") {
     appendToSetDisplayValue(clickedButtonValue);
+		//console.log(`calc complete ${calculationComplete}`);
   } else if (waitingForSecondOperand === true && displayValue !== "") {
     setDisplayValue("");
     setDisplayValue(clickedButtonValue);
     waitingForSecondOperand = false;
-  }
-}
+  } else if (calculationComplete === true && displayValue !== "") {
+		setDisplayValue("");
+		setDisplayValue(clickedButtonValue);
+		calculationComplete = false;
+		//console.log(`calc comp ${calculationComplete}`);
+	}
+}  
 
 // When operator button is pressed, after inputting the first operand
 function handleOperation(event) {
   let clickedButtonValue = event.target.value;
   currentOperation = window[clickedButtonValue];
+	console.log(currentOperation);
   operand1 = parseFloat(getDisplayValue());
+	console.log(operand1);
   waitingForSecondOperand = true;
 }
 
