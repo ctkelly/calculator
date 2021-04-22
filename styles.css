@@ -45,10 +45,6 @@ button {
 .iconify {
   position: relative;
   margin-right: -2px;
-  /*display: inline;*/
-  /*margin: auto;*/
-  /*vertical-align: middle;*/
-  /*padding-top: 8px;*/
   font-size: 26px;
 }
 
@@ -80,14 +76,9 @@ button {
    
  }
 
-button:active { 
-  outline: darkcyan;
-  border: darkcyan;
-} 
-
-button:focus {
-  outline: darkcyan;
-  border: darkcyan;
+button:active {
+  background-color: gainsboro;
+  outline: none;
 } 
 
 button:hover {
