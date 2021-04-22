@@ -29,6 +29,7 @@ allClearBtn.addEventListener("click", allClear);
 
 backSpcBtn.addEventListener("click", backspace);
 
+// Original, operand2 is without commas
 equalsBtn.addEventListener("click", function (event) {
   if (currentOperation !== null) {
     operand2 = parseFloat(getDisplayValue());
@@ -115,14 +116,32 @@ function inputDigit(event) {
 }
 
 // When operator button is pressed, after inputting the first operand
+// WITHOUT COMMAS
 function handleOperation(event) {
   let clickedButtonValue = event.target.value;
   currentOperation = window[clickedButtonValue];
-  console.log(currentOperation);
   operand1 = parseFloat(getDisplayValue());
-  console.log(operand1);
   waitingForSecondOperand = true;
-}
+} 
+
+// When operator button is pressed, after inputting the first operand
+// Changed to parseFloat in if statement to deal with decimals
+// WITH COMMAS
+// Doesn't work with negative numbers
+// function handleOperation(event) {
+//   let clickedButtonValue = event.target.value;
+//   currentOperation = window[clickedButtonValue];
+//   //console.log(currentOperation);
+//   operand1 = getDisplayValue(); 
+//   if (operand1.includes(",")) {
+//     operand1 = operand1.replace(/,/g, "");
+//     operand1 = parseFloat(operand1);
+//     console.log(operand1);
+//   } else {
+//     operand1 = parseFloat(getDisplayValue());
+//   }  
+//   waitingForSecondOperand = true;
+// } 
 
 //Functions below are add/subtract/multiply/divide for single pairs of numbers only.
 function add(num1, num2) {
@@ -176,12 +195,25 @@ function operate(operator, num1, num2) {
   }
 }
 
-// Formats the result ( > 1 ) to certain number of sig figs (NOT decimal places) to fit in the display and formats with sci notation. Using toFixed() doesn't limit the decimals nor formats with sci notation.
+// Formats the result (if > 1 ) to certain number of sig figs (NOT decimal places) to fit in the display and formats with sci notation. Using toFixed() doesn't limit the decimals nor formats with sci notation.
+// WITHOUT COMMAS
 function formatResult(result) {
   if (result < 1) {
     return parseFloat(result.toFixed(7)); // wrapping in parseFloat gets rid of trailing zeros :)
   } else if (result.toString().length > 9) {
-    return formatNumberWithCommas(parseFloat(result.toPrecision(9)));
+    return parseFloat(result.toPrecision(9));
   }
-  return formatNumberWithCommas(result);
-}
+  return result;
+} 
+
+// Formats the result (if > 1 ) to certain number of sig figs (NOT decimal places) to fit in the display and formats with sci notation. Using toFixed() doesn't limit the decimals nor formats with sci notation.
+// WITH COMMAS
+// function formatResult(result) {
+//   if (result < 1) {
+//     return parseFloat(result.toFixed(7)); // wrapping in parseFloat gets rid of trailing zeros :)
+//   } else if (result.toString().length > 9) {
+//     return formatNumberWithCommas(parseFloat(result.toPrecision(9)));
+//   }
+//   return formatNumberWithCommas(result);
+// }
+
