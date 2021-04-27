@@ -48,7 +48,7 @@ function getDisplayValue() {
 
 // Set what's going to be shown in the display.  Param "value" is a placeholder for whatever will be shown in the display.
 function setDisplayValue(value) {
-  display.textContent = value;
+  return display.textContent = value;
 }
 
 function appendToSetDisplayValue(value) {
@@ -79,7 +79,7 @@ function formatNumberWithCommas(number) {
 
 // Changes display value from positive to negative and vice versa
 function changeSign() {
-  let displayValue = getDisplayValue(); // this doesn't work as a global variable because...practice explaining to Jeff
+  let displayValue = getDisplayValue(); 
   if (displayValue === "") {
     setDisplayValue("-");
   } else if (displayValue === "-") {
@@ -95,7 +95,7 @@ function changeSign() {
 
 // Input digits into the display -- updated with decimal validation and digit limit for operands
 function inputDigit(event) {
-  let displayValue = getDisplayValue(); // also cannot be global for same reason as above
+  let displayValue = getDisplayValue(); 
   let clickedButtonValue = event.target.value;
   if (displayValue.includes(".") && clickedButtonValue === "." && waitingForSecondOperand === false) {
     return;
@@ -116,32 +116,22 @@ function inputDigit(event) {
 }
 
 // When operator button is pressed, after inputting the first operand
-// WITHOUT COMMAS
-function handleOperation(event) {
-  let clickedButtonValue = event.target.value;
-  currentOperation = window[clickedButtonValue];
-  operand1 = parseFloat(getDisplayValue());
-  waitingForSecondOperand = true;
-} 
-
-// When operator button is pressed, after inputting the first operand
 // Changed to parseFloat in if statement to deal with decimals
 // WITH COMMAS
 // Doesn't work with negative numbers
-// function handleOperation(event) {
-//   let clickedButtonValue = event.target.value;
-//   currentOperation = window[clickedButtonValue];
-//   //console.log(currentOperation);
-//   operand1 = getDisplayValue(); 
-//   if (operand1.includes(",")) {
-//     operand1 = operand1.replace(/,/g, "");
-//     operand1 = parseFloat(operand1);
-//     console.log(operand1);
-//   } else {
-//     operand1 = parseFloat(getDisplayValue());
-//   }  
-//   waitingForSecondOperand = true;
-// } 
+function handleOperation(event) {
+  let clickedButtonValue = event.target.value;
+  currentOperation = window[clickedButtonValue];
+  operand1 = getDisplayValue(); 
+  if (operand1.includes(",")) {
+    operand1 = operand1.replace(/,/g, "");
+    operand1 = parseFloat(operand1);
+    console.log(operand1);
+  } else {
+    operand1 = parseFloat(getDisplayValue());
+  }  
+  waitingForSecondOperand = true;
+} 
 
 //Functions below are add/subtract/multiply/divide for single pairs of numbers only.
 function add(num1, num2) {
@@ -158,7 +148,7 @@ function multiply(num1, num2) {
 
 function divide(num1, num2) {
   if (num2 === 0) {
-    return (display.textContent = "not possible!"); // this DOES NOT WORK!!! if using setDisplayValue -- won't display the message
+    return setDisplayValue("not possible!"); 
   } else {
     return num1 / num2;
   }
@@ -166,10 +156,10 @@ function divide(num1, num2) {
 
 //Factorial fx, using for loop
 function factorial(event) {
-  // why is event grayed out?
   let num = parseInt(getDisplayValue());
   if (num > 100) {
-    return setDisplayValue("error"); // if no return, it won't display "error" -- is it skipping to the loop? -- displays "infinity"
+    setDisplayValue("error");
+    return; 
   } else if (num === 0 || num === 1) {
     num = 1;
     setDisplayValue(num);
@@ -180,10 +170,10 @@ function factorial(event) {
   setDisplayValue(formatResult(num));
 }
 
-// Operate function. Takes as params an operator fx and two nums to perform the calculation. // Doesn't work without return statements. Is it because the return value needs to be returned to operator()?
+// Operate function. Takes as params an operator fx and two nums to perform the calculation. 
 function operate(operator, num1, num2) {
   let answer = 0;
-  let mathOperation = operator(num1, num2); // operator() needs the return value to populate mathOperation?
+  let mathOperation = operator(num1, num2); 
   if (operator === divide && num2 === 0) {
     return mathOperation;
   } else if (operator === divide && mathOperation < 1) {
@@ -196,24 +186,13 @@ function operate(operator, num1, num2) {
 }
 
 // Formats the result (if > 1 ) to certain number of sig figs (NOT decimal places) to fit in the display and formats with sci notation. Using toFixed() doesn't limit the decimals nor formats with sci notation.
-// WITHOUT COMMAS
+// WITH COMMAS
 function formatResult(result) {
   if (result < 1) {
     return parseFloat(result.toFixed(7)); // wrapping in parseFloat gets rid of trailing zeros :)
   } else if (result.toString().length > 9) {
-    return parseFloat(result.toPrecision(9));
+    return formatNumberWithCommas(parseFloat(result.toPrecision(9)));
   }
-  return result;
-} 
-
-// Formats the result (if > 1 ) to certain number of sig figs (NOT decimal places) to fit in the display and formats with sci notation. Using toFixed() doesn't limit the decimals nor formats with sci notation.
-// WITH COMMAS
-// function formatResult(result) {
-//   if (result < 1) {
-//     return parseFloat(result.toFixed(7)); // wrapping in parseFloat gets rid of trailing zeros :)
-//   } else if (result.toString().length > 9) {
-//     return formatNumberWithCommas(parseFloat(result.toPrecision(9)));
-//   }
-//   return formatNumberWithCommas(result);
-// }
+  return formatNumberWithCommas(result);
+}
 
