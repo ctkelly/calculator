@@ -74,8 +74,12 @@ function allClear() {
 
 // Changes display value from positive to negative and vice versa
 function changeSign() {
-  let displayValue = getDisplayValue(); 
-  if (displayValue === "") {
+  let displayValue = getDisplayValue();
+  if (waitingForSecondOperand === true && displayValue !== "") { 
+    setDisplayValue("");
+    setDisplayValue("-");
+    waitingForSecondOperand = false;
+  } else if (displayValue === "") {
     setDisplayValue("-");
   } else if (displayValue === "-") {
     setDisplayValue("");
@@ -96,6 +100,8 @@ function inputDigit(event) {
     return;
   } else if (displayValue === "") {
     setDisplayValue(clickedButtonValue);
+  } else if (displayValue === "-") {
+    appendToSetDisplayValue(clickedButtonValue);
   } else if (displayValue.toString().length <= 9 && waitingForSecondOperand === false && calculationComplete === false && displayValue !== "") {
     appendToSetDisplayValue(clickedButtonValue);
   } else if (waitingForSecondOperand === true && displayValue !== "") {
