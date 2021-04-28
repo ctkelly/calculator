@@ -144,7 +144,7 @@ function divide(num1, num2) {
   } else {
     return num1 / num2;
   }
-}
+} 
 
 //Factorial fx, using for loop
 function factorial(event) {
