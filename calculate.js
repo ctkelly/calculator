@@ -13,7 +13,6 @@ let currentOperation = null;
 let calculationComplete = false;
 let waitingForSecondOperand = false;
 
-
 digitBtns.forEach((button) => {
   button.addEventListener("click", inputDigit);
 });
@@ -30,7 +29,7 @@ allClearBtn.addEventListener("click", allClear);
 
 backSpcBtn.addEventListener("click", backspace);
 
-// Original, operand2 is without commas
+// Takes operand2 without commas
 equalsBtn.addEventListener("click", function (event) {
   if (currentOperation !== null) {
     operand2 = parseFloat(getDisplayValue());
@@ -49,7 +48,7 @@ function getDisplayValue() {
 
 // Set what's going to be shown in the display.  Param "value" is a placeholder for whatever will be shown in the display.
 function setDisplayValue(value) {
-  display.textContent = value;
+  return display.textContent = value;
 }
 
 function appendToSetDisplayValue(value) {
@@ -73,15 +72,14 @@ function allClear() {
   waitingForSecondOperand = false;
 }
 
-// Inserts commas as thousands separators
-function formatNumberWithCommas(number) {
-  return number.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
-}
-
 // Changes display value from positive to negative and vice versa
 function changeSign() {
-  let displayValue = getDisplayValue(); 
-  if (displayValue === "") {
+  let displayValue = getDisplayValue();
+  if (waitingForSecondOperand === true && displayValue !== "") { 
+    setDisplayValue("");
+    setDisplayValue("-");
+    waitingForSecondOperand = false;
+  } else if (displayValue === "") {
     setDisplayValue("-");
   } else if (displayValue === "-") {
     setDisplayValue("");
@@ -102,6 +100,8 @@ function inputDigit(event) {
     return;
   } else if (displayValue === "") {
     setDisplayValue(clickedButtonValue);
+  } else if (displayValue === "-") {
+    appendToSetDisplayValue(clickedButtonValue);
   } else if (displayValue.toString().length <= 9 && waitingForSecondOperand === false && calculationComplete === false && displayValue !== "") {
     appendToSetDisplayValue(clickedButtonValue);
   } else if (waitingForSecondOperand === true && displayValue !== "") {
@@ -118,48 +118,12 @@ function inputDigit(event) {
 
 // When operator button is pressed, after inputting the first operand
 // WITHOUT COMMAS
-// function handleOperation(event) {
-//   let clickedButtonValue = event.target.value;
-//   currentOperation = window[clickedButtonValue];
-//   operand1 = parseFloat(getDisplayValue());
-//   waitingForSecondOperand = true;
-// } 
-
-// When operator button is pressed, after inputting the first operand
-// Changed to parseFloat in if statement to deal with decimals
-// WITH COMMAS
-// Doesn't work with negative numbers
 function handleOperation(event) {
   let clickedButtonValue = event.target.value;
   currentOperation = window[clickedButtonValue];
-  //console.log(currentOperation);
-  operand1 = getDisplayValue(); 
-  if (operand1.includes(",")) {
-    operand1 = operand1.replace(/,/g, "");
-    operand1 = parseFloat(operand1);
-    console.log(operand1);
-  } else {
-    operand1 = parseFloat(getDisplayValue());
-  }  
+  operand1 = parseFloat(getDisplayValue());
   waitingForSecondOperand = true;
 } 
-
-// Experiment to deal with negative numbers -- regex -- haven't figured out yet
-// function handleOperation(event) {
-//   let clickedButtonValue = event.target.value;
-//   currentOperation = window[clickedButtonValue];
-//   //console.log(currentOperation);
-//   operand1 = getDisplayValue(); 
-//   if (operand1.includes(",")) {
-//     operand1 = operand1.replace(/,/g, "");
-//     operand1 = parseFloat(operand1);
-//     console.log(operand1);
-//   } else {
-//     operand1 = parseFloat(getDisplayValue());
-//   }  
-//   waitingForSecondOperand = true;
-// } 
-
 
 //Functions below are add/subtract/multiply/divide for single pairs of numbers only.
 function add(num1, num2) {
@@ -176,7 +140,7 @@ function multiply(num1, num2) {
 
 function divide(num1, num2) {
   if (num2 === 0) {
-    return display.textContent = "not possible!"; // this DOES NOT WORK!!! if using setDisplayValue -- won't display the message
+    return setDisplayValue("not possible!"); 
   } else {
     return num1 / num2;
   }
@@ -187,7 +151,7 @@ function factorial(event) {
   let num = parseInt(getDisplayValue());
   if (num > 100) {
     setDisplayValue("error");
-    return; // if no return, it won't display "error" -- is it skipping to the loop? -- displays "infinity"
+    return; 
   } else if (num === 0 || num === 1) {
     num = 1;
     setDisplayValue(num);
@@ -198,10 +162,10 @@ function factorial(event) {
   setDisplayValue(formatResult(num));
 }
 
-// Operate function. Takes as params an operator fx and two nums to perform the calculation. // Doesn't work without return statements. Is it because the return value needs to be returned to operator()?
+// Operate function. Takes as params an operator fx and two nums to perform the calculation. 
 function operate(operator, num1, num2) {
   let answer = 0;
-  let mathOperation = operator(num1, num2); // operator() needs the return value to populate mathOperation?
+  let mathOperation = operator(num1, num2); 
   if (operator === divide && num2 === 0) {
     return mathOperation;
   } else if (operator === divide && mathOperation < 1) {
@@ -215,23 +179,12 @@ function operate(operator, num1, num2) {
 
 // Formats the result (if > 1 ) to certain number of sig figs (NOT decimal places) to fit in the display and formats with sci notation. Using toFixed() doesn't limit the decimals nor formats with sci notation.
 // WITHOUT COMMAS
-// function formatResult(result) {
-//   if (result < 1) {
-//     return parseFloat(result.toFixed(7)); // wrapping in parseFloat gets rid of trailing zeros :)
-//   } else if (result.toString().length > 9) {
-//     return parseFloat(result.toPrecision(9));
-//   }
-//   return result;
-// } 
-
-// Formats the result (if > 1 ) to certain number of sig figs (NOT decimal places) to fit in the display and formats with sci notation. Using toFixed() doesn't limit the decimals nor formats with sci notation.
-// WITH COMMAS
 function formatResult(result) {
   if (result < 1) {
     return parseFloat(result.toFixed(7)); // wrapping in parseFloat gets rid of trailing zeros :)
   } else if (result.toString().length > 9) {
-    return formatNumberWithCommas(parseFloat(result.toPrecision(9)));
+    return parseFloat(result.toPrecision(9));
   }
-  return formatNumberWithCommas(result);
-}
+  return result;
+} 
 
