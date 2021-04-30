@@ -29,7 +29,7 @@ allClearBtn.addEventListener("click", allClear);
 
 backSpcBtn.addEventListener("click", backspace);
 
-// Takes operand2 without commas
+// Performs the calculation and resets operands and state of operation
 equalsBtn.addEventListener("click", function (event) {
   if (currentOperation !== null) {
     operand2 = parseFloat(getDisplayValue());
@@ -51,6 +51,7 @@ function setDisplayValue(value) {
   return display.textContent = value;
 }
 
+// Append digits to the display
 function appendToSetDisplayValue(value) {
   display.textContent += value;
 }
@@ -119,7 +120,6 @@ function inputDigit(event) {
 } 
 
 // When operator button is pressed, after inputting the first operand
-// WITHOUT COMMAS
 function handleOperation(event) {
   let clickedButtonValue = event.target.value;
   currentOperation = window[clickedButtonValue];
@@ -180,7 +180,6 @@ function operate(operator, num1, num2) {
 }
 
 // Formats the result (if > 1 ) to certain number of sig figs (NOT decimal places) to fit in the display and formats with sci notation. Using toFixed() doesn't limit the decimals nor formats with sci notation.
-// WITHOUT COMMAS
 function formatResult(result) {
   if (result < 1) {
     return parseFloat(result.toFixed(7)); // wrapping in parseFloat gets rid of trailing zeros :)
