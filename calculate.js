@@ -102,6 +102,8 @@ function inputDigit(event) {
     setDisplayValue(clickedButtonValue);
   } else if (displayValue === "-") {
     appendToSetDisplayValue(clickedButtonValue);
+  } else if (displayValue.includes("-") && waitingForSecondOperand === false) {
+    appendToSetDisplayValue(clickedButtonValue);
   } else if (displayValue.toString().length <= 9 && waitingForSecondOperand === false && calculationComplete === false && displayValue !== "") {
     appendToSetDisplayValue(clickedButtonValue);
   } else if (waitingForSecondOperand === true && displayValue !== "") {
@@ -114,7 +116,7 @@ function inputDigit(event) {
     setDisplayValue(clickedButtonValue);
     calculationComplete = false;
   }
-}
+} 
 
 // When operator button is pressed, after inputting the first operand
 // WITHOUT COMMAS
